@@ -12,12 +12,11 @@ from ultralytics import YOLO
 # yolov8s has ~11M parameters (3.5x more than nano) for recognizing dark cases & hand grips
 model = YOLO("yolov8s.pt")
 
-# Target classes: 67 = 'cell phone', 65 = 'remote'
-# Dark smartphones held upright in hand are frequently classified as cell phone or remote
-TARGET_CLASSES = [67, 65]
+# Target class: strictly 67 = 'cell phone' only (prevents microphones/remotes from triggering)
+TARGET_CLASSES = [67]
 
 # Detection settings
-confidence_threshold = 0.25   # Tuned to capture phones held in hand without false alarms
+confidence_threshold = 0.30   # Clean threshold for genuine smartphones only
 YOLO_IMGSZ = 640              # Full 640px resolution for sharp edge & camera lens detection
 PERSISTENCE_SEC = 0.8         # Keep alert active for 0.8s to avoid flicker if hand moves
 
@@ -65,8 +64,7 @@ def detection_worker():
             for box in results[0].boxes:
                 xyxy = box.xyxy[0].cpu().numpy().astype(int)
                 conf = float(box.conf[0])
-                cls_id = int(box.cls[0])
-                label_name = "Phone" if cls_id == 67 else "Device"
+                label_name = "Phone"
                 detected.append((xyxy[0], xyxy[1], xyxy[2], xyxy[3], conf, label_name))
 
             with boxes_lock:
