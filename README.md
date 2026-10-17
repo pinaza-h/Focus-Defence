@@ -1,40 +1,20 @@
-# Anti-Distraction AI 🎯
+# Focus-Defence 🛡️📱
 
-A real-time computer vision system that tracks **eye gaze direction** and detects **smartphones** to monitor focus and prevent distraction.
+An intelligent, real-time computer vision anti-distraction system that detects **cell phone usage** during study or work sessions to protect your focus.
 
 ---
 
 ## 🚀 Features
 
-- **High-Precision Eye Tracking**: Tracks iris positions using MediaPipe Face Mesh (`refine_landmarks=True`).
-- **Tilt-Compensated Baseline**: Uses the skeletal eye-corner axis to accurately detect Up, Down, Left, Right, and Center without eyelid droop interference.
-- **1-Second Auto-Calibration**: Captures personal neutral resting gaze on startup; press `c` anytime to recalibrate.
-- **Real-Time Phone Detection**: Uses YOLOv8 nano (`yolov8n`) to detect cell phones in real-time.
-- **Anti-Distraction Decision Engine**:
-  - 🟢 **Focused**: Looking at the screen, no phone in view.
-  - 🟡 **Looking Away**: Glancing away from the screen.
-  - 🟠 **Phone in View**: Smartphone detected in camera frame.
-  - 🔴 **Distracted Alert**: Phone detected **AND** gaze is directed **Down** (flashing red alert border).
-
----
-
-## 🛠️ Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone <YOUR_REPO_URL>
-   cd "Camera detection"
-   ```
-
-2. **Install dependencies with `uv`**:
-   ```bash
-   uv sync
-   ```
-
-3. **Run the application**:
-   ```bash
-   uv run main.py
-   ```
+- **Real-Time Phone Detection**: Powered by YOLOv8 (`yolov8n`), detecting smartphones regardless of angle, orientation, or hand grip.
+- **De-Flicker Persistence**: Uses temporal smoothing so momentary hand occlusions don't cause flickering alarms.
+- **Dynamic Distraction Alerts**:
+  - 🟢 **Focus Mode**: Clean green HUD tracking continuous focused time.
+  - 🔴 **Distracted Mode**: Flashing red perimeter alarm and real-time timer tracking how long you've been on your phone.
+- **Focus Analytics**:
+  - Focus Score percentage (`Net Focus Time / Total Session Time`).
+  - Distraction incident counter (`Distractions: X`).
+- **Optional Audio Beep**: Toggleable alarm sound alerting you when you pick up your phone.
 
 ---
 
@@ -42,15 +22,35 @@ A real-time computer vision system that tracks **eye gaze direction** and detect
 
 | Key | Action |
 |:---:|:---|
-| **`c`** | Re-center / recalibrate neutral gaze |
+| **`m`** | Toggle audio warning beep (Mute / Unmute) |
+| **`r`** | Reset session statistics and focus score |
 | **`q`** | Quit application |
+
+---
+
+## 🛠️ Installation & Run
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/pinaza-h/Focus-Defence.git
+   cd Focus-Defence
+   ```
+
+2. **Sync dependencies**:
+   ```bash
+   uv sync
+   ```
+
+3. **Launch Focus-Defence**:
+   ```bash
+   uv run main.py
+   ```
 
 ---
 
 ## 📦 Tech Stack
 
 - **Python 3.12**
-- **OpenCV**: Camera capture, frame processing, and HUD rendering.
-- **MediaPipe**: 478-point 3D Face Mesh with refined iris landmarks.
-- **Ultralytics YOLOv8**: Real-time object detection for cell phones.
-- **uv**: Fast Python package management.
+- **Ultralytics YOLOv8**: High-speed real-time cell phone object detection.
+- **OpenCV**: High-framerate video stream processing and HUD overlay.
+- **uv**: Fast Python environment & package management.
