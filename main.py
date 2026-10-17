@@ -16,12 +16,21 @@ model = YOLO("yolov8s.pt")
 TARGET_CLASSES = [67]
 
 # Detection settings
-confidence_threshold = 0.30   # Clean threshold for genuine smartphones only
+confidence_threshold = 0.22   # Tuned to capture dark phones & back of phones in hands
 YOLO_IMGSZ = 640              # Full 640px resolution for sharp edge & camera lens detection
-PERSISTENCE_SEC = 0.8         # Keep alert active for 0.8s to avoid flicker if hand moves
+PERSISTENCE_SEC = 1.4         # 1.4s smoothing so holding/moving phone never drops detection
 
 # Camera setup
 webcam = cv2.VideoCapture(0)
+
+# CLAHE contrast enhancer (helps YOLO detect dark objects in backlit/dim rooms)
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+
+def enhance_for_ai(frame):
+    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    l_eq = clahe.apply(l)
+    return cv2.cvtColor(cv2.merge((l_eq, a, b)), cv2.COLOR_LAB2BGR)
 
 # Threading state for 30 FPS smooth video + background AI inference
 frame_lock = threading.Lock()
@@ -53,8 +62,10 @@ def detection_worker():
                 img_for_yolo = latest_frame.copy()
 
         if img_for_yolo is not None:
+            # Enhance shadows & edge contrast for backlit/dim camera feeds
+            ai_input = enhance_for_ai(img_for_yolo)
             results = model.predict(
-                img_for_yolo,
+                ai_input,
                 classes=TARGET_CLASSES,
                 conf=confidence_threshold,
                 imgsz=YOLO_IMGSZ,
