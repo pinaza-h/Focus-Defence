@@ -1,4 +1,4 @@
-![Uploading Banner.jpg…]()
+
 # Focus-Defence 🛡️📱
 
 An intelligent, privacy-first real-time computer vision anti-distraction system that detects **cell phone usage** during study or work sessions to protect your deep focus.
