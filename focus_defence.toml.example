@@ -1,0 +1,35 @@
+# Copy this file to `focus_defence.toml` to override defaults automatically.
+
+[camera]
+camera_index = 0
+
+[detection]
+model_path = "yolov8s.pt"
+device = "auto" # "auto", "cpu", or "cuda:0"
+imgsz = 416
+confidence_threshold = 0.22
+person_confidence_threshold = 0.35
+ai_fps_limit = 0.0 # 0.0 = unlimited
+cpu_threads = 0 # 0 = auto-tune for smooth camera + UI
+clahe_enabled = true
+detect_person = true
+require_near_person = false
+
+[timings]
+confirm_sec = 0.5
+persistence_sec = 1.4
+grace_sec = 2.5
+escalate_sec = 10.0
+away_timeout_sec = 4.0
+
+[pomodoro]
+pomodoro_enabled = false
+work_minutes = 25.0
+break_minutes = 5.0
+
+[ux]
+headless = false
+tray_enabled = true
+sound_enabled = false
+notifications_enabled = true
+

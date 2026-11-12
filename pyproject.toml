@@ -1,10 +1,32 @@
 [project]
 name = "focus-defence"
-version = "0.1.0"
+version = "0.2.0"
 description = "AI Phone Detection & Anti-Distraction Monitor"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "onnx>=1.23.2",
+    "onnxruntime>=1.31.1",
     "opencv-python>=5.0.0.93",
+    "pystray>=0.19.5",
     "ultralytics>=8.4.180",
 ]
+
+[project.scripts]
+focus-defence = "focus_defence.app:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["focus_defence*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
